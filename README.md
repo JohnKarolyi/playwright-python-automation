@@ -16,10 +16,6 @@ Ez egy modern, Python-alapú automatizált tesztkeretrendszer, amely a **Playwri
 * **Adatvezérelt integráció:** JSON fájlokból történő automatikus adatkezelés.
 * **Adatbázis validáció:** SQLite alapú SQL lekérdezések a tesztek ellenőrzéséhez.
 
-## 🚀 Futtatás helyileg
-1. `pip install -r requirements.txt`
-2. `playwright install`
-3. `pytest --headed`
 ## 📁 Projekt Struktúra
 * `pages/`: Page Object osztályok (Lokalizátorok és akciók)
 * `tests/`: Tényleges tesztesetek
