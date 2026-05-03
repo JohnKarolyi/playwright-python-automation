@@ -16,5 +16,11 @@ class LoginPage:
         self.username_field.focus()
         self.page.keyboard.press("Tab")
 
+    def login(self, username, password):
+        self.page.fill("#username", username)
+        self.page.fill("#password", password)
+        self.page.click("button[type='submit']")
+
+
     def verify_username(self, expected_email: str):
         expect(self.username_field).to_have_value(str(expected_email))
