@@ -1,14 +1,20 @@
+from playwright.sync_api import Page, expect
+
 class LoginPage:
-    def __init__(self, page):
+    def __init__(self, page: Page):
         self.page = page
-        self._username = page.locator("#user-name")
-        self._password = page.locator("#password")
-        self._login_btn = page.locator("#login-button")
+        self.url = "https://practice.expandtesting.com/login"
+        self.username_field = page.locator("#username")
 
     def navigate(self):
-        self.page.goto("https://saucedemo.com")
+        self.page.goto(self.url, wait_until="load")
 
-    def login(self, user, pwd):
-        self._username.fill(user)
-        self._password.fill(pwd)
-        self._login_btn.click()
+    def fill_username_custom(self, email: str):
+        # Itt van a te speciális logikád elrejtve
+        self.username_field.wait_for(state="attached", timeout=10000)
+        self.username_field.evaluate(f"(el) => el.value = '{email}'")
+        self.username_field.focus()
+        self.page.keyboard.press("Tab")
+
+    def verify_username(self, expected_email: str):
+        expect(self.username_field).to_have_value(str(expected_email))
