@@ -17,6 +17,20 @@ Ez egy modern, Python-alapú automatizált tesztkeretrendszer, amely a **Playwri
 * **Adatbázis validáció:** SQLite alapú SQL lekérdezések a tesztek ellenőrzéséhez.
 * ## 🛠️ Technikai Kiemelések és Megoldások
 
+## 🔄 End-to-End (E2E) Tesztfolyamat
+
+A projekt tartalmaz egy komplex integrációs tesztet (`test_e2e_flow.py`), amely a következő lépéseken megy keresztül:
+
+1. **Adat-előkészítés**: Beolvas egy felhasználói profilt egy `JSON` fájlból.
+2. **Adatbázis integráció**: Az adatokat elmenti egy ideiglenes `SQLite` adatbázisba.
+3. **UI Automatizálás**:
+   - Elindít egy böngészőt a **Playwright** segítségével.
+   - Navigál a bejelentkező oldalra.
+   - Kezeli a felugró süti-ablakokat (JavaScript alapú eltávolítás).
+   - Beírja az adatbázisból visszakért e-mail címet a bejelentkező mezőbe.
+4. **Validáció**: Ellenőrzi, hogy a felületen megjelenő adat megegyezik-e az eredeti forrásadattal.
+5. **Takarítás**: A teszt végeztével automatikusan törli az ideiglenes adatbázis fájlt.
+
 Ebben a projektben egy komplex automatizálási folyamatot valósítottam meg, amely során több technikai kihívást is sikerült leküzdenem:
 
 - **Teljes E2E Adatfolyam**: Megterveztem egy folyamatot, ahol a tesztadatok **JSON** fájlból indulnak, egy **SQLite** adatbázisba kerülnek, majd a **Playwright** segítségével egy webes felületen (UI) kerülnek ellenőrzésre.
