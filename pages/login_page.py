@@ -3,24 +3,21 @@ from playwright.sync_api import Page, expect
 class LoginPage:
     def __init__(self, page: Page):
         self.page = page
+        # A pontos aldomain és elérési út (pontosan így írd be!)
         self.url = "https://practice.expandtesting.com/login"
-        self.username_field = page.locator("#username")
+        
+        # Modern lokátorok: a felirat (label) alapján azonosítunk (4. és 5. kérdés javítása)
+        self.username_field = page.get_by_label("Username")
+        self.password_field = page.get_by_label("Password")
+        # A gombot a szerepe és a felirata alapján keressük
+        self.login_button = page.get_by_role("button", name="Login")
 
     def navigate(self):
-        self.page.goto(self.url, wait_until="load")
-
-    def fill_username_custom(self, email: str):
-        # Itt van a te speciális logikád elrejtve
-        self.username_field.wait_for(state="attached", timeout=10000)
-        self.username_field.evaluate(f"(el) => el.value = '{email}'")
-        self.username_field.focus()
-        self.page.keyboard.press("Tab")
+        # A megadott URL-re navigálunk
+        self.page.goto(self.url)
 
     def login(self, username, password):
-        self.page.fill("#username", username)
-        self.page.fill("#password", password)
-        self.page.click("button[type='submit']")
-
-
-    def verify_username(self, expected_email: str):
-        expect(self.username_field).to_have_value(str(expected_email))
+        # Az __init__-ben definiált mezőket használjuk
+        self.username_field.fill(username)
+        self.password_field.fill(password)
+        self.login_button.click()
