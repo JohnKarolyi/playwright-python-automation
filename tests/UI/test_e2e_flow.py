@@ -1,46 +1,45 @@
 import pytest
 import os
-from playwright.sync_api import Page
+from pages.login_page import LoginPage
 from db_utils.db_handler import DBHandler
 from db_utils.file_handler import FileHandler
-from pages.login_page import LoginPage
+from playwright.sync_api import expect
 
-def test_full_flow_json_to_db_to_ui(page: Page):
+def test_full_flow_json_to_db_to_ui(page):
     # 1. ADAT ELŐKÉSZÍTÉS (JSON -> DB)
     db_name = "e2e_test.db"
     data_path = os.path.join("data", "user_data.json")
     user_data = FileHandler.read_json(data_path)
 
     db = DBHandler(db_name)
+    # Tábla létrehozása és a korábbi adatok törlése
     db.execute_query("CREATE TABLE IF NOT EXISTS users (name TEXT, email TEXT)")
+    db.execute_query("DELETE FROM users")
     
-    # Itt a trükk: kívül szimpla ('), belül dupla (") idézőjel:
-    db.execute_query(f"INSERT INTO users VALUES ('{user_data['name']}', '{user_data['email']}')")
+    # Adat beszúrása az adatbázisba (dinamikus string összefűzéssel)
+    insert_query = f"INSERT INTO users VALUES ('{user_data['name']}', '{user_data['email']}')"
+    db.execute_query(insert_query)
 
     # 2. ADAT LEKÉRDEZÉS A DB-BŐL
     db_result = db.fetch_data("SELECT email FROM users LIMIT 1")
+    
+    # Az SQLite általában listában lévő tuple-ként adja vissza az adatot: [('email@test.com',)]
+    user_email_from_db = None
+    if db_result and len(db_result) > 0:
+        # Kinyerjük az első sor első elemét
+        first_row = db_result[0]
+        user_email_from_db = first_row[0] if isinstance(first_row, tuple) else first_row
 
-    if isinstance(db_result, list) and len(db_result) > 0:
-        # Ha tuple-t kapunk vissza, kivesszük az első elemét
-        user_email_from_db = db_result[0][0] if isinstance(db_result[0], tuple) else db_result[0]
-    else:
-        user_email_from_db = user_data["email"]
-
-    # 3. UI TESZT - POM (Page Object Model) használatával
+    # 3. UI TESZT - POM használatával
     login_page = LoginPage(page)
-    
-    # Navigáció az oldalra
     login_page.navigate()
-    
-    # Várakozás (opcionális, a POM-ba is tehető, de itt hagytam a vizualitás miatt)
-    page.wait_for_timeout(1000)
 
     # 4. ADAT BEÍRÁSA ÉS ELLENŐRZÉS
-    # Meghívjuk a POM-ban definiált metódusokat
-    login_page.fill_username_custom(user_email_from_db)
-    
-    # 5. ELLENŐRZÉS (Assertion)
-    login_page.verify_username(user_email_from_db)
+    if user_email_from_db:
+        # A LoginPage-ben definiált modern lokátort használjuk
+        login_page.username_field.fill(user_email_from_db)
+        
+        # Ellenőrizzük, hogy a mező értéke megegyezik-e az adatbázisból kapottal
+        expect(login_page.username_field).to_have_value(user_email_from_db)
 
-    page.wait_for_timeout(2000)
-    print(f"\n SIKER! A(z) '{user_email_from_db}' sikeresen beírva a lánc végén, POM struktúrával.")
+    # A db.close() hívást töröltük, mert a DBHandler osztályod nem tartalmazza ezt a metódust.
