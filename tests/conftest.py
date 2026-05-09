@@ -8,7 +8,7 @@ import allure
 def manage_db_files():
     temp_files = ["integration_test.db"]
     yield
-    # Kényszerítsük a Python-t a takarításra
+    # Kényszerítsük a Python-t a takarításra, hogy a DB fájl elengedhető legyen
     gc.collect()
     time.sleep(0.2)
     for file in temp_files:
@@ -19,7 +19,7 @@ def manage_db_files():
             except Exception as e:
                 print(f"\n[Cleanup Error] Sikertelen törlés: {e}")
 
-# VIDEÓ RÖGZÍTÉS BEÁLLÍTÁSA
+# VIDEÓ RÖGZÍTÉS BEÁLLÍTÁSA A BÖNGÉSZŐ KONTEXTUSBAN
 @pytest.fixture(scope="session")
 def browser_context_args(browser_context_args):
     return {
@@ -28,25 +28,24 @@ def browser_context_args(browser_context_args):
         "record_video_size": {"width": 1280, "height": 720}
     }
 
-# VIDEÓ BECSATOLÁSA AZ ALLURE RIPORTBA
+# VIDEÓ AUTOMATIKUS BECSATOLÁSA AZ ALLURE RIPORTBA
 @pytest.hookimpl(tryfirst=True, hookwrapper=True)
 def pytest_runtest_makereport(item, call):
     outcome = yield
     report = outcome.get_result()
 
-    # Csak a teszt futási fázisában ("call") nézzük
+    # Csak a teszt futási szakaszában (call) keressük a videót
     if report.when == "call":
-        # Megkeressük a 'page' objektumot a tesztben
         page = item.funcargs.get("page")
         if page:
-            # Megvárjuk, amíg a videó fájl elérhetővé válik a lemezre írás után
-            # Nem zárunk context-et kézzel, mert az törölheti a fájlt!
-            time.sleep(0.5) 
+            # Fontos: hagyjunk időt a Playwright-nak lezárni a videófájlt!
+            time.sleep(1) 
             video_path = page.video.path()
             
             if video_path and os.path.exists(video_path):
+                # A name="video.webm" segít az Allure-nek és a böngészőnek a felismerésben
                 allure.attach.file(
                     video_path,
-                    name="Test_Execution_Video",
+                    name="video.webm", 
                     attachment_type=allure.attachment_type.WEBM
                 )
