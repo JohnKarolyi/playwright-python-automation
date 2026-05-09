@@ -5,24 +5,21 @@ import gc
 
 @pytest.fixture(scope="function", autouse=True)
 def manage_db_files():
+    # SQLite adatbázis fájl takarítása tesztek között
     temp_files = ["integration_test.db"]
     yield
-    # Kényszerítsük a Python-t a takarításra, hogy a DB fájl elengedhető legyen
     gc.collect()
     time.sleep(0.2)
     for file in temp_files:
         if os.path.exists(file):
             try:
                 os.remove(file)
-                print(f"\n[Cleanup] {file} törölve.")
-            except Exception as e:
-                print(f"\n[Cleanup Error] Sikertelen törlés: {e}")
+            except Exception:
+                pass
 
-# VIDEÓ RÖGZÍTÉS KONFIGURÁCIÓJA
-# A Playwright automatikusan a 'videos/' mappába ment, 
-# az Allure pedig automatikusan beszippantja onnan, ha a keretrendszer kéri.
 @pytest.fixture(scope="session")
 def browser_context_args(browser_context_args):
+    # Itt adjuk meg, hova kerüljenek a videók a futás során
     return {
         **browser_context_args,
         "record_video_dir": "videos/",
