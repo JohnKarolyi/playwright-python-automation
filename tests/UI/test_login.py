@@ -2,6 +2,7 @@ import pytest
 from playwright.sync_api import expect
 from pages.login_page import LoginPage
 
+@pytest.mark.login
 def test_successful_login(page):
     # 1. Oldal objektum példányosítása
     login_page = LoginPage(page)

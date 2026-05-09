@@ -3,6 +3,7 @@ import os
 from db_utils.db_handler import DBHandler
 from db_utils.file_handler import FileHandler
 
+@pytest.mark.database
 def test_file_to_db_integration():
     db_name = "integration_test.db"
     

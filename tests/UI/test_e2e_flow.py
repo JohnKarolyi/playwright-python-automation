@@ -5,6 +5,9 @@ from db_utils.db_handler import DBHandler
 from db_utils.file_handler import FileHandler
 from playwright.sync_api import expect
 
+@pytest.mark.login
+@pytest.mark.database
+@pytest.mark.file_management
 def test_full_flow_json_to_db_to_ui(page):
     # 1. ADAT ELŐKÉSZÍTÉS (JSON -> DB)
     db_name = "e2e_test.db"
