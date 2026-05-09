@@ -33,17 +33,20 @@ def browser_context_args(browser_context_args):
 def pytest_runtest_makereport(item, call):
     outcome = yield
     report = outcome.get_result()
-    
+
+    # Csak a teszt futási fázisában ("call") nézzük
     if report.when == "call":
         # Megkeressük a 'page' objektumot a tesztben
         page = item.funcargs.get("page")
         if page:
-            # Megvárjuk, amíg a videó fájl véglegesítődik
-            page.context.close()
+            # Megvárjuk, amíg a videó fájl elérhetővé válik a lemezre írás után
+            # Nem zárunk context-et kézzel, mert az törölheti a fájlt!
+            time.sleep(0.5) 
             video_path = page.video.path()
-            if os.path.exists(video_path):
+            
+            if video_path and os.path.exists(video_path):
                 allure.attach.file(
-                    video_path, 
-                    name="Test_Execution_Video", 
+                    video_path,
+                    name="Test_Execution_Video",
                     attachment_type=allure.attachment_type.WEBM
                 )
