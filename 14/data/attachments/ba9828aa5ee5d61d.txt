@@ -1,0 +1,3 @@
+API válaszidő: 0.01 másodperc
+
+[Video Attachment Error] Nem sikerült a videót csatolni: list.remove(x): x not in list

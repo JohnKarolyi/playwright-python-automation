@@ -1,0 +1,4 @@
+
+✅ Playwright sikeresen elindult és látja az oldalt!
+
+[Video Attachment Error] Nem sikerült a videót csatolni: list.remove(x): x not in list
