@@ -1,4 +1,0 @@
-
-Az irányítószám városa: Budapest
-
-[Video Attachment Error] Nem sikerült a videót csatolni: list.remove(x): x not in list
