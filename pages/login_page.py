@@ -1,12 +1,17 @@
 class LoginPage:
     def __init__(self, page):
         self.page = page
-        self._username = page.locator("#username")
-        self._password = page.locator("#password")
-        self._login_btn = page.locator("button[type='submit']")
+        self.username = page.locator("#username")
+        self.password = page.locator("#password")
+        self.login_btn = page.locator("button[type='submit']")
+
+    def navigate(self):
+        """Megnyitja a bejelentkező oldalt"""
+        # Ide azt az URL-t írd, amit tesztelni szeretnél
+        self.page.goto("https://practicetestautomation.com")
 
     def login(self, user, pwd):
-        # delay=200: 0.2 másodpercet vár minden leütött billentyű között
-        self._username.press_sequentially(user, delay=200)
-        self._password.press_sequentially(pwd, delay=200)
-        self._login_btn.click()
+        """Végrehajtja a bejelentkezést lassított gépeléssel"""
+        self.username.press_sequentially(user, delay=200)
+        self.password.press_sequentially(pwd, delay=200)
+        self.login_btn.click()
