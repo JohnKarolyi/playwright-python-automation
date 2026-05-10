@@ -22,16 +22,15 @@ def browser_context_args(browser_context_args):
     return {
         **browser_context_args,
         "record_video_dir": "videos/",
-        "record_video_size": {"width": 1280, "height": 720}
+        "record_video_size": {"width": 1280, "height": 720},
+        # GLOBÁLIS LASSÍTÁS: Minden művelet után vár 0.8 másodpercet
+        "slow_mo": 800 
     }
 
 @pytest.hookimpl(hookwrapper=True, tryfirst=True)
 def pytest_runtest_makereport(item, call):
     outcome = yield
     report = outcome.get_result()
-    
-    # A videót a teszt végén, a 'teardown' fázisban csatoljuk, 
-    # mert ekkorra a Playwright már biztosan lezárta a fájlt.
     if report.when == "teardown":
         page = item.funcargs.get("page")
         if page:
