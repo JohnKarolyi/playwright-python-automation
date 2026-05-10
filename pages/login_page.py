@@ -3,11 +3,12 @@ class LoginPage:
         self.page = page
         self.username = page.locator("#username")
         self.password = page.locator("#password")
-        self.login_btn = page.locator("button[type='submit']")
+        # Ez a sor változik:
+        self.login_btn = page.locator("#submit") 
 
     def navigate(self):
         """Megnyitja a pontos bejelentkező oldalt"""
-        self.page.goto("https://practicetestautomation.com/practice-test-login/")
+        self.page.goto("https://practicetestautomation.com")
 
     def login(self, user, pwd):
         """Végrehajtja a bejelentkezést lassított gépeléssel"""
