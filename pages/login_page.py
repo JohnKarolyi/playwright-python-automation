@@ -7,7 +7,7 @@ class LoginPage:
 
     def navigate(self):
         """Megnyitja a pontos bejelentkező oldalt"""
-        self.page.goto("https://practicetestautomation.com")
+        self.page.goto("https://practicetestautomation.com/practice-test-login/")
 
     def login(self, user, pwd):
         """Végrehajtja a bejelentkezést lassított gépeléssel"""
