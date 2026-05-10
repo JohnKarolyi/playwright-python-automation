@@ -1,1 +1,0 @@
-API válaszidő: 0.01 másodperc
