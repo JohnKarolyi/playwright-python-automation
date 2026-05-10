@@ -1,5 +1,9 @@
 # Python Playwright Automation Framework 🚀
 
+# Playwright Python Automation Project
+[Allure Report megnyitása](https://johnkarolyi.github.io/playwright-python-automation/)
+
+
 Ez egy modern, Python-alapú automatizált tesztkeretrendszer, amely a **Playwright** könyvtárat használja a stabil és gyors UI teszteléshez.
 
 ## 🛠 Alkalmazott Technológiák
@@ -51,3 +55,12 @@ Ebben a projektben egy komplex automatizálási folyamatot valósítottam meg, a
 1. `pip install -r requirements.txt`
 2. `playwright install`
 3. `pytest --headed`
+
+## 📊 Teszt Riportok (Allure)
+
+A legfrissebb tesztfuttatási eredmények és videók megtekinthetők az alábbi linken:
+
+👉 **[Allure Report megnyitása](https://JohnKarolyi.github.io/playwright-python-automation/)**
+
+*(Megjegyzés: A riport minden sikeres GitHub Actions futtatás után automatikusan frissül.)*
+![Playwright Tests](https://github.com/JohnKarolyi/playwright-python-automation/actions/workflows/playwright.yml/badge.svg)
