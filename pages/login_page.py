@@ -7,7 +7,6 @@ class LoginPage:
 
     def navigate(self):
         """Megnyitja a bejelentkező oldalt"""
-        # Ide azt az URL-t írd, amit tesztelni szeretnél
         self.page.goto("https://practicetestautomation.com")
 
     def login(self, user, pwd):
