@@ -6,7 +6,7 @@ class LoginPage:
         self.login_btn = page.locator("button[type='submit']")
 
     def navigate(self):
-        """Megnyitja a bejelentkező oldalt"""
+        """Megnyitja a pontos bejelentkező oldalt"""
         self.page.goto("https://practicetestautomation.com")
 
     def login(self, user, pwd):
