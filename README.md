@@ -19,7 +19,25 @@ Ez egy modern, Python-alapú automatizált tesztkeretrendszer, amely a **Playwri
 * **Cross-browser:** Több böngésző támogatása.
 * **Adatvezérelt integráció:** JSON fájlokból történő automatikus adatkezelés.
 * **Adatbázis validáció:** SQLite alapú SQL lekérdezések a tesztek ellenőrzéséhez.
-* ## 🛠️ Technikai Kiemelések és Megoldások
+ 
+## 🛠️ Technikai Kiemelések és Megoldások
+### 🚀 Hibrid UI + API Architektúra (Mai fejlesztés)
+
+#### 1. Hibrid UI + API Tesztelés (Flakiness Csökkentés)
+A keretrendszer nem csupán elszigetelt UI teszteket futtat, hanem hibrid megközelítést alkalmaz. A nehézkes és lassú böngészős interakciók előtt a háttérben **API alapú egészségügyi ellenőrzést (Health Check)** végez. Amennyiben a backend vagy a vizsgált végpont nem érhető el (nem 200-as státuszkódot ad), a UI teszt el sem indul. Ez drasztikusan csökkenti a fals negatív (flaky) teszteredményeket és erőforrást spórol a CI/CD pipeline-ban.
+
+#### 2. Transzparens Allure API Network Logging Wrapper
+A `conftest.py` fájlban implementálásra került egy egyedi, újrafelhasználható **Playwright APIRequestContext Wrapper**. Ez a komponens teljesen automatikusan, transzparens módon naplózza és ágyazza be a tesztriportokba a hálózati forgalmat. Ha a teszt lefut, az Allure riportban fa-struktúrába rendezve, formázott JSON-ként megtekinthető:
+* A küldött **HTTP Metódus és URL**
+* A **Request Body (Payload)** vagy URL paraméterek
+* A kapott **Response Status Code**
+* A szerver által visszaadott **Response Body (JSON vagy Raw Text)**
+
+#### 3. Komplett Üzleti Logika Lefedése (POM alapon)
+A `LoginPage` Page Object Model struktúrát felhasználva a tesztek egyszerre fedik le a:
+* **Happy Path (Pozitív ág)**: Sikeres bejelentkezés és átirányítás validálása.
+* **Negatív ág (Hibakezelés)**: Sikertelen bejelentkezés ellenőrzése dinamikus hibaüzenet-validációval (`Your password is invalid!`).
+
 
 ## 🔄 End-to-End (E2E) Tesztfolyamat
 
