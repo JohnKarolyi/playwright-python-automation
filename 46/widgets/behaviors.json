@@ -1,0 +1,1 @@
+{"total":20,"items":[{"uid":"68a3e24ced4a3d0d1e58eb3d10902d8e","name":"Keretrendszer Ellenőrzés","statistic":{"failed":0,"broken":1,"skipped":0,"passed":0,"unknown":0,"total":1}},{"uid":"693d497fd7cad0057493f2e2abbc6176","name":"Bejelentkezési Folyamatok","statistic":{"failed":0,"broken":0,"skipped":0,"passed":1,"unknown":0,"total":1}}]}

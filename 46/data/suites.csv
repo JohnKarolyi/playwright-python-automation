@@ -1,0 +1,35 @@
+"DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
+"","28","test_create_post[chromium]","tests.API","2026-06-03","passed","2026-06-03","","test_user_api","",""
+"","7294","test_full_flow_json_to_db_to_ui[chromium]","tests","2026-05-03","passed","2026-05-03","","test_e2e_flow","",""
+"Hibrid negatív teszt: API ellenőrzés után hibás jelszavas bejelentkezés validálása.","7427","test_hybrid_invalid_login_flow[chromium]","tests.UI","2026-05-17","passed","2026-05-17","","test_login","",""
+"","944","test_playwright_is_working[chromium]","tests","2026-05-03","passed","2026-05-03","","test_ui_basic","",""
+"Ellenőrizzük, hogy a conftest.py helyesen menti-e az API és UI adatokat.","0","test_framework_api_and_ui_logging[chromium]","","2026-05-17","broken","2026-05-17","","test_conftest_verification","",""
+"","686","test_playwright_is_working[chromium]","tests.UI","2026-06-03","passed","2026-06-03","","test_ui_basic","",""
+"","15","test_api_speed[chromium]","tests_api","2026-05-03","passed","2026-05-03","","test_finance_api","",""
+"Hibrid teszt optimalizált időtúllépéssel és tiszta URL assertion-nel.","8300","test_hybrid_login_flow[chromium]","tests.UI","2026-05-17","passed","2026-05-17","","test_login","",""
+"","449","test_hungarian_zip_code[chromium]","tests_api","2026-05-03","passed","2026-05-03","","test_finance_api","",""
+"","423","test_hungarian_zip_code[chromium]","tests.API","2026-06-03","passed","2026-06-03","","test_finance_api","",""
+"
+    Intelligens hibrid login teszt:
+    Adatvezérelt megközelítés, amely ötvözi az API előszűrést a gyors UI végrehajtással.
+    Kizárólag a Playwright natív eseményvezérelt auto-waiting mechanizmusára támaszkodik.
+    ","3878","test_hybrid_login_flow[chromium-Negat\xedv \xe1g - Hib\xe1s felhaszn\xe1l\xf3n\xe9v]","tests.UI","2026-06-03","passed","2026-06-03","","test_login","",""
+"","9537","test_successful_login[chromium]","tests.UI","2026-05-09","passed","2026-05-09","","test_login","",""
+"","82","test_get_post_details[chromium]","tests_api","2026-05-03","passed","2026-05-03","","test_user_api","",""
+"","2","test_file_to_db_integration","tests","2026-06-03","broken","2026-06-03","","test_integration","",""
+"","127","test_create_post[chromium]","tests_api","2026-05-03","passed","2026-05-03","","test_user_api","",""
+"","350","test_get_post_details[chromium]","tests.API","2026-06-03","passed","2026-06-03","","test_user_api","",""
+"","26","test_api_speed[chromium]","tests.API","2026-06-03","passed","2026-06-03","","test_finance_api","",""
+"
+    Intelligens hibrid login teszt:
+    Adatvezérelt megközelítés, amely ötvözi az API előszűrést a gyors UI végrehajtással.
+    Kizárólag a Playwright natív eseményvezérelt auto-waiting mechanizmusára támaszkodik.
+    ","4812","test_hybrid_login_flow[chromium-Happy Path - Sikeres bejelentkez\xe9s]","tests.UI","2026-06-03","passed","2026-06-03","","test_login","",""
+"","2","test_full_flow_json_to_db_to_ui[chromium]","tests.UI","2026-06-03","broken","2026-06-03","","test_e2e_flow","",""
+"","1819","test_successful_login[chromium]","tests","2026-05-03","failed","2026-05-03","","test_login","",""
+"
+    Intelligens hibrid login teszt:
+    Adatvezérelt megközelítés, amely ötvözi az API előszűrést a gyors UI végrehajtással.
+    Kizárólag a Playwright natív eseményvezérelt auto-waiting mechanizmusára támaszkodik.
+    ","3662","test_hybrid_login_flow[chromium-Negat\xedv \xe1g - Hib\xe1s jelsz\xf3]","tests.UI","2026-06-03","passed","2026-06-03","","test_login","",""
+"Ellenőrizzük, hogy a conftest.py helyesen menti-e az API és UI adatokat.","2566","test_framework_api_and_ui_logging[chromium]","tests","2026-05-17","passed","2026-05-17","","test_conftest_verification","",""
