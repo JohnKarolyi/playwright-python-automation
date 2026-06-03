@@ -1,4 +1,23 @@
-{
-  "name": "Teszt Elek",
-  "email": "elek@teszt.hu"
-}
+[
+  {
+    "test_case": "Happy Path - Sikeres bejelentkezés",
+    "username": "student",
+    "password": "Password123",
+    "expected_url_contains": "logged-in-successfully",
+    "should_succeed": true
+  },
+  {
+    "test_case": "Negatív ág - Hibás felhasználónév",
+    "username": "invalid_user",
+    "password": "Password123",
+    "expected_error": "Your username is invalid!",
+    "should_succeed": false
+  },
+  {
+    "test_case": "Negatív ág - Hibás jelszó",
+    "username": "student",
+    "password": "WrongPassword",
+    "expected_error": "Your password is invalid!",
+    "should_succeed": false
+  }
+]

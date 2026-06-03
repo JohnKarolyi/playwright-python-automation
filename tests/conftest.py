@@ -1,10 +1,11 @@
-# conftest.py
+# tests/conftest.py
 import pytest
 import os
 import time
 import gc
 import allure
 import json
+from pages.login_page import LoginPage
 
 # ==========================================
 # 1. MEGLÉVŐ FIXTURE-ÖK (DB TISZTÍTÁS & VIDEÓ)
@@ -118,3 +119,15 @@ def logged_api(api_context):
                 return response
 
     return LoggedAPIClient()
+
+# ==========================================
+# 3. ÚJ UI PAGE OBJECT FIXTURE-ÖK (Senior injektálás)
+# ==========================================
+
+@pytest.fixture(scope="function")
+def login_page(page):
+    """
+    Fixture, amely automatikusan biztosítja a bejelentkezési oldal objektumot a tesztek számára.
+    Megszünteti a manuális példányosítást a tesztfájlokban, így tisztább architektúrát ad.
+    """
+    return LoginPage(page)
