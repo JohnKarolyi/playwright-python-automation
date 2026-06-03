@@ -1,3 +1,4 @@
+# conftest.py
 import pytest
 import os
 import time
@@ -6,7 +7,7 @@ import allure
 import json
 
 # ==========================================
-# 1. MEGLÉVŐ FIXTURE-ÖK (DB, LASSÍTÁS, VIDEÓ)
+# 1. MEGLÉVŐ FIXTURE-ÖK (DB TISZTÍTÁS & VIDEÓ)
 # ==========================================
 
 @pytest.fixture(scope="function", autouse=True)
@@ -23,13 +24,7 @@ def manage_db_files():
             except Exception:
                 pass
 
-@pytest.fixture(scope="session")
-def browser_type_launch_args(browser_type_launch_args):
-    """Böngésző lassítása – optimalizált érték az időtúllépés (Timeout) elkerülésére."""
-    return {
-        **browser_type_launch_args,
-        "slow_mo": 300  # 300 ms-ra optimalizálva a stabilabb futásért
-    }
+# KIVÁGVA: A browser_type_launch_args (slow_mo=300) teljesen eltávolításra került!
 
 @pytest.fixture(scope="session")
 def browser_context_args(browser_context_args):
@@ -62,7 +57,7 @@ def pytest_runtest_makereport(item, call):
                 pass
 
 # ==========================================
-# 2. ÚJ FIXTURE-ÖK AZ API AUTOMATIKUS NAPLÓZÁSHOZ (ÉLES ÜZEMMÓD)
+# 2. API AUTOMATIKUS NAPLÓZÁS (VÁLTOZATLANUL STABIL)
 # ==========================================
 
 @pytest.fixture(scope="session")
