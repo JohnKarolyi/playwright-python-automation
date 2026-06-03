@@ -3,8 +3,7 @@
 # Playwright Python Automation Project
 [Allure Report megnyitása](https://johnkarolyi.github.io/playwright-python-automation/)
 
-
-Ez egy modern, Python-alapú automatizált tesztkeretrendszer, amely a **Playwright** könyvtárat használja a stabil és gyors UI teszteléshez.
+Ez egy modern, Python-alapú automatizált tesztkeretrendszer, amely a **Playwright** könyvtárat használja a stabil és gyors UI teszteléshez, ötvözve az API szintű validációval és SQL adatbázis-kezeléssel.
 
 ## 🛠 Alkalmazott Technológiák
 * **Nyelv:** Python 3.11+
@@ -15,31 +14,31 @@ Ez egy modern, Python-alapú automatizált tesztkeretrendszer, amely a **Playwri
 
 ## ✨ Főbb Jellemzők
 * **POM struktúra:** Tiszta, karbantartható kód felépítés.
-* **Automatizált tesztek:** Bejelentkezési folyamatok validálása valós környezetben.
-* **Cross-browser:** Több böngésző támogatása.
-* **Adatvezérelt integráció:** JSON fájlokból történő automatikus adatkezelés.
+* **Automatizált tesztek:** Bejelentkezési és összetett üzleti folyamatok validálása.
+* **Cross-browser:** Több böngésző támogatása CI/CD környezetben.
+* **Adatvezérelt integráció:** Külső JSON fájlokból történő dinamikus adatkezelés (`pytest.mark.parametrize`).
 * **Adatbázis validáció:** SQLite alapú SQL lekérdezések a tesztek ellenőrzéséhez.
  
 ## 🛠️ Technikai Kiemelések és Megoldások
-### 🚀 Hibrid UI + API Architektúra (Mai fejlesztés)
 
-#### 1. Hibrid UI + API Tesztelés (Flakiness Csökkentés)
-A keretrendszer nem csupán elszigetelt UI teszteket futtat, hanem hibrid megközelítést alkalmaz. A nehézkes és lassú böngészős interakciók előtt a háttérben **API alapú egészségügyi ellenőrzést (Health Check)** végez. Amennyiben a backend vagy a vizsgált végpont nem érhető el (nem 200-as státuszkódot ad), a UI teszt el sem indul. Ez drasztikusan csökkenti a fals negatív (flaky) teszteredményeket és erőforrást spórol a CI/CD pipeline-ban.
+### 🚀 Eseményvezérelt Hibrid UI + API Architektúra
 
-#### 2. Transzparens Allure API Network Logging Wrapper
-A `conftest.py` fájlban implementálásra került egy egyedi, újrafelhasználható **Playwright APIRequestContext Wrapper**. Ez a komponens teljesen automatikusan, transzparens módon naplózza és ágyazza be a tesztriportokba a hálózati forgalmat. Ha a teszt lefut, az Allure riportban fa-struktúrába rendezve, formázott JSON-ként megtekinthető:
+#### 1. 0 ms Slow_Mo & Eseményvezérelt Működés (Új)
+A keretrendszer felszámolta a hagyományos tesztautomatizálási anti-patterneket: **nem használunk mesterséges lassításokat (`slow_mo`) vagy merev időzítéseket (`time.sleep()`)** a UI tesztek stabilizálására. A maximális futási sebesség mellett a stabilitást a Playwright natív *Actionability Checks* mechanizmusa, valamint a hálózati és DOM állapotfigyelők (`networkidle`, `domcontentloaded`) garantálják.
+
+#### 2. Intelligens Hibrid Adatvezérlés (Új)
+A bejelentkezési tesztek adatai teljesen le vannak választva a tesztlogikáról a `data/user_data.json` fájlba. A Pytest dinamikusan generálja a teszteseteket (Happy Path és Negatív ágak). A teszt végrehajtása előtt a háttérben egy **API alapú egészségügyi ellenőrzést (Health Check)** végzünk. Amennyiben a végpont nem érhető el, a drágább UI teszt el sem indul (Fail-Fast elv).
+
+#### 3. Transzparens Allure API Network Logging Wrapper
+A `conftest.py` fájlban implementálásra került egy egyedi, újrafelhasználható **Playwright APIRequestContext Wrapper**. Ez a komponens teljesen automatikusan, transzparens módon naplózza és ágyazza be a tesztriportokba a hálózati forgalmat. Ha a teszt lefut, az Allure riportban formázott JSON-ként megtekinthető:
 * A küldött **HTTP Metódus és URL**
 * A **Request Body (Payload)** vagy URL paraméterek
 * A kapott **Response Status Code**
 * A szerver által visszaadott **Response Body (JSON vagy Raw Text)**
 
-#### 3. Komplett Üzleti Logika Lefedése (POM alapon)
-A `LoginPage` Page Object Model struktúrát felhasználva a tesztek egyszerre fedik le a:
-* **Happy Path (Pozitív ág)**: Sikeres bejelentkezés és átirányítás validálása.
-* **Negatív ág (Hibakezelés)**: Sikertelen bejelentkezés ellenőrzése dinamikus hibaüzenet-validációval (`Your password is invalid!`).
+---
 
-
-## 🔄 End-to-End (E2E) Tesztfolyamat
+## 🔄 End-to-End (E2E) Tesztfolyamat (SQLite Integráció)
 
 A projekt tartalmaz egy komplex integrációs tesztet (`test_e2e_flow.py`), amely a következő lépéseken megy keresztül:
 
@@ -53,32 +52,43 @@ A projekt tartalmaz egy komplex integrációs tesztet (`test_e2e_flow.py`), amel
 4. **Validáció**: Ellenőrzi, hogy a felületen megjelenő adat megegyezik-e az eredeti forrásadattal.
 5. **Takarítás**: A teszt végeztével automatikusan törli az ideiglenes adatbázis fájlt.
 
-Ebben a projektben egy komplex automatizálási folyamatot valósítottam meg, amely során több technikai kihívást is sikerült leküzdenem:
+A folyamat során az alábbi technikai kihívások kerültek megoldásra:
+- **Stabil UI Automatizálás**: A makacs süti-bannerek okozta kitakarási hibákat JavaScript injektálással (`evaluate` metódus) hárítottam el. Nyelvfüggetlen technikai azonosítókat (ID-k) használtam a stabilitásért.
+- **Tiszta Tesztarchitektúra**: A tesztek utáni automatikus takarítást (adatbázis fájlok törlése) a `conftest.py` fájlban központosítottam (teardown folyamat).
+- **Operációs Rendszer Szintű Hibakezelés**: Megoldottam az SQLite fájlzárolási problémáit (WinError 32) a Python szemétgyűjtőjének (Garbage Collector) finomhangolásával.
 
-- **Teljes E2E Adatfolyam**: Megterveztem egy folyamatot, ahol a tesztadatok **JSON** fájlból indulnak, egy **SQLite** adatbázisba kerülnek, majd a **Playwright** segítségével egy webes felületen (UI) kerülnek ellenőrzésre.
-- **Stabil UI Automatizálás**:
-  - A makacs süti-banner (cookie banner) okozta kitakarási hibákat JavaScript injektálással (`evaluate` metódus) hárítottam el, így a teszt akkor is sikeres, ha a gombok nem láthatóak.
-  - Nyelvfüggetlen technikai azonosítókat (ID-k) használtam, hogy a tesztek az oldal különböző nyelvű verzióin is stabilan fussanak.
-- **Tiszta Tesztarchitektúra**:
-  - A tesztek utáni automatikus takarítást (adatbázis fájlok törlése) a `conftest.py` fájlban központosítottam (teardown folyamat).
-  - Különálló modulokat készítettem a fájlkezeléshez és az adatbázis-műveletekhez a könnyebb karbantarthatóság érdekében.
-- **Operációs Rendszer Szintű Hibakezelés**: Megoldottam az SQLite fájlzárolási problémáit (WinError 32) a Python szemétgyűjtőjének (Garbage Collector) és időzítéseknek a finomhangolásával.
+---
 
 ## 📁 Projekt Struktúra
+* `data/`: Külső tesztadatok (pl. `user_data.json` az adatvezérléshez)
 * `pages/`: Page Object osztályok (Lokalizátorok és akciók)
-* `tests/`: Tényleges tesztesetek
+* `tests/`: Tényleges tesztesetek (különválasztott UI és API rétegek)
 * `requirements.txt`: Függőségek listája
 
+---
+
 ## 🚀 Telepítés és Futtatás
-1. `pip install -r requirements.txt`
-2. `playwright install`
-3. `pytest --headed`
+1. Függőségek telepítése:
+   ```bash
+   pip install -r requirements.txt
+   ```
+2. Playwright böngészők letöltése:
+   ```bash
+   playwright install
+   ```
+3. Tesztek futtatása részletes (verbose) módban:
+   ```bash
+   pytest tests/UI/test_login.py -v
+   ```
+
+---
 
 ## 📊 Teszt Riportok (Allure)
 
-A legfrissebb tesztfuttatási eredmények és videók megtekinthetők az alábbi linken:
+A legfrissebb tesztfuttatási eredmények és hibák esetén automatikusan rögzített videók megtekinthetők az alábbi linken:
 
 👉 **[Allure Report megnyitása](https://JohnKarolyi.github.io/playwright-python-automation/)**
 
 *(Megjegyzés: A riport minden sikeres GitHub Actions futtatás után automatikusan frissül.)*
+
 ![Playwright Tests](https://github.com/JohnKarolyi/playwright-python-automation/actions/workflows/playwright.yml/badge.svg)
