@@ -1,0 +1,5 @@
+"BROKEN","EPIC","FAILED","FEATURE","PASSED","SKIPPED","STORY","UNKNOWN"
+"0","Bejelentkezési Folyamatok","0","Hibrid Bejelentkezés","1","0","Sikeres bejelentkezés validálása előzetes API ellenőrzéssel","0"
+"0","","1","","14","0","","0"
+"0","Bejelentkezési Folyamatok","0","Hibrid Bejelentkezés","1","0","Sikertelen bejelentkezés validálása rossz jelszóval","0"
+"1","Keretrendszer Ellenőrzés","0","Hibrid Funkciók Tesztelése","1","0","API naplózás és UI videó validálása","0"
