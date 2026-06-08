@@ -6,8 +6,15 @@ class LoginPage:
         self.login_button = page.locator("#submit")
 
     def navigate(self):
-        """Megnyitja a gyakorló bejelentkező oldalt"""
-        self.page.goto("https://practicetestautomation.com/practice-test-login/")
+        """
+        Megnyitja a gyakorló bejelentkező oldalt.
+        A 'domcontentloaded' paraméter megakadályozza a hálózati timeout (időtúllépés) hibákat, 
+        mert nem várja meg a lassú külső scriptek vagy hirdetések betöltődését.
+        """
+        self.page.goto(
+            "https://practicetestautomation.com/practice-test-login/", 
+            wait_until="domcontentloaded"
+        )
 
     def login(self, user, pwd):
         """Végrehajtja a bejelentkezést lassított gépeléssel"""
