@@ -31,7 +31,7 @@ def test_hybrid_login_flow(page, login_page, logged_api, data):
     # 1. SZAKASZ: API ELŐSZŰRÉS ÉS INTEGRÁCIÓS ELLENŐRZÉS (Hibrid réteg)
     # -------------------------------------------------------------
     # Végrehajtunk egy hálózati health check-et az API kliensünkkel a UI teszt indítása előtt (Fail-Fast).
-    health_check = logged_api.request("GET", "/practice-test-login/")
+    health_check = logged_api.request("GET", "/")
     assert health_check.status == 200, f"Az oldal nem érhető el! Státusz: {health_check.status}"
 
     # -------------------------------------------------------------
