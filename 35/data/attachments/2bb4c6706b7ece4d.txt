@@ -1,4 +1,0 @@
-
-✅ Teszt kész, a conftest.py most törli a fájlt...
-
-[Cleanup] integration_test.db törölve.
