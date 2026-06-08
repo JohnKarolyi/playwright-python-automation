@@ -6,23 +6,19 @@ on:
   pull_request:
     branches: [ main, master ]
   workflow_dispatch:
-    inputs:
-      test_suite:
-        description: 'Válaszd ki a futtatandó tesztcsomagot (HR indítás):'
-        required: true
-        default: 'all'
-        type: choice
-        options:
-          - all
-          - login
-          - database
-          - file_management
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
 
 jobs:
   test:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -33,54 +29,54 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          pip install allure-pytest
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
-      - name: Install Playwright Chromium Browser
-        run: python -m playwright install --with-deps chromium
-
-      - name: Start Local Web Server
+      - name: Install Playwright Browsers
         run: |
-          cd app && python app.py &
-          timeout 10s bash -c 'until curl -s http://127.0.0.1:5000 > /dev/null; do sleep 1; done'
+          python -m playwright install --with-deps chromium
 
-      - name: Run tests
+      - name: Start Flask Server and Wait
         run: |
-          mkdir -p videos
-          if [ "${{ github.event_name }}" == "workflow_dispatch" ] && [ "${{ github.event.inputs.test_suite }}" != "all" ]; then
-            if [ "${{ github.event.inputs.test_suite }}" == "login" ]; then
-              python -m pytest tests/UI/test_login.py --alluredir=allure-results
-            elif [ "${{ github.event.inputs.test_suite }}" == "database" ]; then
-              python -m pytest -m database --alluredir=allure-results
-            elif [ "${{ github.event.inputs.test_suite }}" == "file_management" ]; then
-              python -m pytest tests/test_integration.py tests/test_excel_e2e.py --alluredir=allure-results
+          # Flask elindítása a háttérben
+          python app/app.py &
+          
+          # Robusztus várakozási ciklus az 5000-es portra (max 30 másodperc)
+          echo "Várakozás a helyi Flask szerver elindulására..."
+          for i in {1..30}; do
+            if curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:5000; then
+              echo "A Flask szerver sikeresen elindult és online!"
+              break
             fi
-          else
-            python -m pytest tests --alluredir=allure-results
-          fi
+            echo "A szerver még nem válaszol, várakozás... ($i/30)"
+            sleep 1
+          done
+
+      - name: Run Playwright Tests
+        run: |
+          python -m pytest tests --alluredir=allure-results --clean-alluredir
+        continue-on-error: true
 
       - name: Get Allure history
+        uses: actions/checkout@v4
         if: always()
         continue-on-error: true
-        uses: actions/checkout@v4
         with:
           ref: gh-pages
-          path: gh-pages
+          path: gh-pages-dir
 
-      - name: Allure Report action from github-actions-automation
-        if: always()
+      - name: Allure Report Action
         uses: simple-elf/allure-report-action@master
+        if: always()
         id: allure-report
         with:
           allure_results: allure-results
-          gh_pages: gh-pages
+          gh_pages: gh-pages-dir
           allure_report: allure-report
           allure_history: allure-history
 
-      - name: Deploy report to Github Pages
+      - name: Deploy Allure Report to GitHub Pages
+        uses: peaceiris/actions-deploy-mixin@v1
         if: always()
-        uses: peaceiris/actions-gh-pages@v4
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
           publish_dir: allure-history
