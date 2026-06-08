@@ -48,7 +48,7 @@ jobs:
       # ÚJ SZAKASZ: Elindítjuk a helyi backend szervert a háttérben, hogy a felhőben is fusson az 5000-es porton
       - name: Start Local Web Server
         run: |
-          python app.py &
+          cd app && python app.py &
           # Megvárjuk, amíg a szerver valóban elindul és válaszol az 5000-es porton
           timeout 10s bash -c 'until curl -s http://127.0.0.1:5000 > /dev/null; do sleep 1; done'
 
